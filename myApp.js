@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const app = express();
-
+app.use(helmet.hidePoweredBy());
 const PORT = process.env.PORT || 3030;
 
 
