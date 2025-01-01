@@ -7,14 +7,8 @@ var app = express();
 app.disable("x-powered-by");
 var fs = require("fs");
 var path = require("path");
-var bcrypt = require("bcrypt"); // Require bcrypt
+let bcrypt = require('bcrypt');
 
-app.use(express.json()); // Middleware to parse JSON bodies
-
-// In-memory user storage (for demonstration purposes)
-var users = [];
-
-// Middleware for CORS
 app.use(function (req, res, next) {
   res.set({
     "Access-Control-Allow-Origin": "*",
@@ -23,29 +17,6 @@ app.use(function (req, res, next) {
   });
   app.disable("x-powered-by");
   next();
-});
-
-// User registration endpoint
-app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
-  users.push({ username, password: hashedPassword }); // Store user
-  res.status(201).send("User  registered");
-});
-
-// User login endpoint
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find((u) => u.username === username);
-  if (!user) {
-    return res.status(400).send("User  not found");
-  }
-  const isMatch = await bcrypt.compare(password, user.password); // Compare passwords
-  if (isMatch) {
-    res.send("Login successful");
-  } else {
-    res.status(400).send("Invalid password");
-  }
 });
 
 app.get("/file/*?", function (req, res, next) {
